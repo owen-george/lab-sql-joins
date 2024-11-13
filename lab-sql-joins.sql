@@ -51,13 +51,12 @@ ORDER BY times_rented desc
 LIMIT 10;
 
 -- 7 Determine if "Academy Dinosaur" can be rented from Store 1.
-SELECT f.title, COUNT(r.rental_id) as times_rented from sakila.film as f
+SELECT f.title, COUNT(r.rental_id) as times_rented
+from sakila.film as f
 JOIN inventory as i on f.film_id = i.film_id
-JOIN rental as r ON r.inventory_id = i.inventory_id
+LEFT JOIN rental as r ON r.inventory_id = i.inventory_id
 WHERE f.title = "ACADEMY DINOSAUR" AND i.store_id = 1
-GROUP BY f.title
-ORDER BY times_rented desc
-LIMIT 10;
+GROUP BY f.title;
 
 -- 8 Provide a list of all distinct film titles, along with their availability status in the inventory.
 -- Include a column indicating whether each title is 'Available' or 'NOT available.'
@@ -67,4 +66,5 @@ CASE WHEN i.film_id is not null then 'Available'
 ELSE 'NOT available'
 END AS availability
  from sakila.film as f
-RIGHT JOIN inventory as i on i.film_id = f.film_id;
+LEFT JOIN sakila.inventory as i on i.film_id = f.film_id
+GROUP BY f.title;
